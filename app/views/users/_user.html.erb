@@ -15,22 +15,24 @@
     </div>
 
     <div class="row mb-4">
-      <div class="col">
-        <%=
-          link_to "#",
-            data: { 
-              bs_toggle: "modal", 
-              bs_target: "##{dom_id(user)}_followers"
-            } do %>
+      <%# if policy(user).followers? %>
+        <div class="col">
+          <%=
+            link_to "#",
+              data: { 
+                bs_toggle: "modal", 
+                bs_target: "##{dom_id(user)}_followers"
+              } do %>
 
-          <span class="font-weight-bold">
-            <%= user.followers.size %>
-          </span>
+            <span class="font-weight-bold">
+              <%= user.followers.size %>
+            </span>
 
-          followers
+            followers
 
-        <% end %>
-      </div>
+          <% end %>
+        </div>
+      <%# end %>
 
       <div class="col">
         <%=
@@ -128,13 +130,15 @@
   </div>
 </div>
 
-<%=
-  render "users/connected_users_modal",
-    user: user,
-    connected_users: user.followers,
-    description: "followers",
-    target: "#{dom_id(user)}_followers"
-%>
+<%# if policy(user).followers? %>
+  <%=
+    render "users/connected_users_modal",
+      user: user,
+      connected_users: user.followers,
+      description: "followers",
+      target: "#{dom_id(user)}_followers"
+  %>
+<%# end %>
 
 <%=
   render "users/connected_users_modal",
