@@ -1,6 +1,7 @@
 class CommentsController < ApplicationController
   before_action :set_comment, only: %i[ show edit update destroy ]
   before_action :is_an_authorized_user, only: [:destroy, :create]
+  before_action { authorize( @comment || Comment) }
 
   # GET /comments or /comments.json
   def index
@@ -9,7 +10,6 @@ class CommentsController < ApplicationController
 
   # GET /comments/1 or /comments/1.json
   def show
-    authorize @comment
   end
 
   # GET /comments/new
@@ -19,14 +19,12 @@ class CommentsController < ApplicationController
 
   # GET /comments/1/edit
   def edit
-    authorize @comment
   end
 
   # POST /comments or /comments.json
   def create
     @comment = Comment.new(comment_params)
     @comment.author = current_user
-    authorize @comment
 
     respond_to do |format|
       if @comment.save
@@ -41,8 +39,6 @@ class CommentsController < ApplicationController
 
   # PATCH/PUT /comments/1 or /comments/1.json
   def update
-    authorize @comment
-
     respond_to do |format|
       if @comment.update(comment_params)
         format.html { redirect_to root_url, notice: "Comment was successfully updated." }
@@ -56,8 +52,6 @@ class CommentsController < ApplicationController
 
   # DELETE /comments/1 or /comments/1.json
   def destroy
-    authorize @comment
-
     @comment.destroy
     respond_to do |format|
       format.html { redirect_back fallback_location: root_url, notice: "Comment was successfully destroyed." }
