@@ -1,6 +1,7 @@
 class PhotosController < ApplicationController
   before_action :set_photo, only: %i[ show edit update destroy ]
   before_action :ensure_current_user_is_owner, only: [:destroy, :update, :edit]
+  before_action { authorize( @photo || Photo) }
 
   # GET /photos or /photos.json
   def index
@@ -27,8 +28,8 @@ class PhotosController < ApplicationController
 
     respond_to do |format|
       if @photo.save
-        format.html { redirect_to @photo, notice: "Photo was successfully created." }
-        format.json { render :show, status: :created, location: @photo }
+        format.html { redirect_to "/#{@photo.owner.username}", notice: "Photo was successfully created." }
+        format.json { render :show, status: :created, location: @photo.owner.username }
       else
         format.html { render :new, status: :unprocessable_entity }
         format.json { render json: @photo.errors, status: :unprocessable_entity }
@@ -74,7 +75,7 @@ class PhotosController < ApplicationController
       redirect_back fallback_location: root_url, alert: "You're not authorized for that."
     end
   end
-  
+
   # Only allow a list of trusted parameters through.
   def photo_params
     params.require(:photo).permit(:image, :comments_count, :likes_count, :caption, :owner_id)
