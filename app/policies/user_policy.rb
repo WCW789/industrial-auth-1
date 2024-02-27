@@ -23,12 +23,4 @@ class UserPolicy < ApplicationPolicy
   def liked?
     true
   end
-  
-  def followers?
-    false
-  end
-
-  def following?
-    false
-  end
 end
